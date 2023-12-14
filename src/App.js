@@ -1,11 +1,13 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { getAllLanguages } from './httpHandlers';
 import './App.css';
+import { copyToClipboard } from './utils';
 
 export default function App() {
   const [source, setSource] = useState('');
   const [targetLang, setTargetLang] = useState('');
   const [languages, setLanguages] = useState([]);
+  const outputRef = useRef();
 
   const onChange = useCallback((evnt) => setSource(evnt.target.value), []);
   const onLangSelect = useCallback(
@@ -16,10 +18,7 @@ export default function App() {
     console.log(targetLang, source);
   }, [source, targetLang]);
 
-  const onResultClick = useCallback((evnt) => {
-    evnt.currentTarget.select();
-    document.execCommand('copy');
-  }, []);
+  const onResultClick = useCallback(() => copyToClipboard(outputRef.current), []);
 
   useEffect(() => {
     getAllLanguages()
@@ -39,7 +38,7 @@ export default function App() {
             {
               languages.map(l => <option value={l}>{l.toUpperCase()}</option>)
             }
-            
+
           </select>
         </div>
         <div className="form-control">
@@ -61,11 +60,9 @@ export default function App() {
       <section className="output-holder">
         <strong>Result: </strong>
         <br />
-        <textarea
-          defaultValue="sdsdjnsdjbf sd fshjdbc"
-          className="output"
-          onClick={onResultClick}
-        ></textarea>
+        <pre className="output" onClick={onResultClick} ref={outputRef}>
+          sndjkss dsjd c sdc knsd
+        </pre>
       </section>
     </main>
   );
