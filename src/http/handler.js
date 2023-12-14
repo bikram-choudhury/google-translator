@@ -6,17 +6,9 @@ const constants = {
   SOURCE_LANG: 'en'
 };
 
-const httpConfig = {
-  headers: {
-    'Accept-Encoding': 'application/gzip',
-    'X-RapidAPI-Key': constants.API_KEY,
-    'X-RapidAPI-Host': 'google-translate1.p.rapidapi.com',
-  },
-};
-
 const getAllLanguages = () => {
   const URL = `${constants.URL}/languages`;
-  const axiosRef = axios.get(URL, httpConfig);
+  const axiosRef = axios.get(URL);
   return axiosRef;
 };
 const buildPostPayload = (payload) => {
@@ -29,10 +21,7 @@ const postToTranslate = async (payload) => {
   const encodedParams = buildPostPayload(payload);
   encodedParams.set('source', constants.SOURCE_LANG);
 
-  const headers = { ...httpConfig.headers };
-  headers['content-type'] = 'application/x-www-form-urlencoded';
-
-  const response = await axios.post(constants.URL, encodedParams, { headers });
+  const response = await axios.post(constants.URL, encodedParams);
   return response.data;
 }
 

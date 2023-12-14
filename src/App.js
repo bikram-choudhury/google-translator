@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { getAllLanguages, postToTranslate } from './httpHandlers';
+import { getAllLanguages, postToTranslate } from './http/handler';
 import './App.css';
 import { copyToClipboard } from './utils';
 
