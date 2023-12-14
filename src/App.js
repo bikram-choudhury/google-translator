@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { getAllLanguages } from './httpHandlers';
+import { getAllLanguages, postToTranslate } from './httpHandlers';
 import './App.css';
 import { copyToClipboard } from './utils';
 
@@ -7,6 +7,7 @@ export default function App() {
   const [source, setSource] = useState('');
   const [targetLang, setTargetLang] = useState('');
   const [languages, setLanguages] = useState([]);
+  const [output, setOutput] = useState('');
   const outputRef = useRef();
 
   const onChange = useCallback((evnt) => setSource(evnt.target.value), []);
@@ -14,8 +15,21 @@ export default function App() {
     (evnt) => setTargetLang(evnt.target.value),
     []
   );
-  const handleClick = useCallback(() => {
-    console.log(targetLang, source);
+  const handleClick = useCallback(async () => {
+    setOutput('');
+    const payload = { srcText: source, targetLang };
+    try {
+      const response = await postToTranslate(payload);
+
+      const data = response.data;
+      const translations = data.translations;
+      const translatedText = translations[0].translatedText;
+
+      // const { data: { translations: [{ translatedText } = {} ] = [] } = {} } = response ?? {};
+      setOutput(translatedText);
+    } catch (error) {
+      console.error("translated error", error);
+    }
   }, [source, targetLang]);
 
   const onResultClick = useCallback(() => copyToClipboard(outputRef.current), []);
@@ -61,7 +75,7 @@ export default function App() {
         <strong>Result: </strong>
         <br />
         <pre className="output" onClick={onResultClick} ref={outputRef}>
-          sndjkss dsjd c sdc knsd
+          {output}
         </pre>
       </section>
     </main>
