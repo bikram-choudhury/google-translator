@@ -40,7 +40,7 @@ export default function App() {
         const { data: { languages } } = res.data;
         const modifiedLangs = languages.map(l => l.language);
         setLanguages(modifiedLangs);
-      });
+      }).catch(err => console.error(err));
   }, []);
 
   return (
